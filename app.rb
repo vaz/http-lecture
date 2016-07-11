@@ -1,5 +1,7 @@
 require 'sinatra'
+require 'json'
 
 get '/' do
-  "#{request.to_json}"
+  content_type :json # sets Content-Type header
+  request.env.to_json
 end

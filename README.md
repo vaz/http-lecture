@@ -44,8 +44,8 @@ are way dumber than we are.
 
 - The [Hyper-Text Transfer
   Protocol](https://www.w3.org/Protocols/rfc2616/rfc2616.html) standard
-  defines interaction between **CLIENT** (user, user-agent, browser) and
-  **SERVER** (web application).
+  defines interaction between *Client* (user, user-agent, browser) and
+  *Server* (web application).
 
 - It's still all text in, text out.
 
@@ -55,27 +55,28 @@ are way dumber than we are.
 - In HTTP, the client makes a request and the server responds. Repeat
   as necessary.
 
-- A client sends an *HTTP Request* to read (or write to) a *resource* on
-  the server. The server and the resource are identified by a *URI*.
+- A client sends an *HTTP Request* to read (or write to) a *Resource* on
+  the server. The server and the resource are identified by a *URI*,
   The request describes what the user wants to do to the resource,
-  and 
+  and includes metadata about the request, the client and its
+  preferences/capabilities in the form of headers. Requests can have
+  body content, usually only when making updates.
 
-  the desired action is given as a *Method*, metadata about the
-  request are given as *Headers*
-  
-  and can refer to data in any format. HTTP doesn't care; it only
-  describes the *way*
-  
-  HTML pages, data encoded in JSON/XML/etc, images, videos...
-  Whether they're read from static files or generated dynamically
-  resources, like HTML pages, assets submit forms, load assets,
-  dynamically CRUD data using Javascript.  It interprets and renders responses
-  from the server.
+- A resource can be represented by data in any format: HTML pages, plain
+  text, images, javascripts, stylesheets, JSON or XML data, to name a few.
+  HTTP itself doesn't care what is said, only *how* it's said.
+
+- The client (user agent) interprets responses from the server. A browser
+  will render resources visually, or javascript on the page might read
+  and write to a database through an HTTP API, formatted in JSON.
+  A web scraper might not render anything, but instead store the
+  content or analysis of the response to use later. Etc. The user agent
+  will do what it's designed to do with the response, which is its business.
 
 ## Flow of an HTTP request/response cycle
 
 Clients make requests. Servers look at a request, do something, and return
-a response. That's it.
+a response. That's it, repeat as needed.
 
 ### First, who's involved? (Who are the parties?)
 
@@ -87,21 +88,23 @@ The parties involved are:
 #### Client (User Agent, Browser)
 
 * The client wants something (they are making a request)
-  * That "something" is a RESOURCE
+  * That "something" is a *resource*
 * The client "finds" the server
   * They know a URL with which to reach the server
 * The client describes their request to the server and sends it.
-  * The request describes what the client wants to DO with the RESOURCE
+  * The request describes what the client wants to *do* with the *resource*
     on the server.
-* The client must conform to the HTTP standard being used
 
 #### Server
 
 * The server must be listening for requests
 * The server must be reachable (by someone - the client)
 * The server provides responses
-* The server, and HTTP protocol, *in general*, are STATELESS
-* The server must conform to the HTTP standard being used
+* The server, and HTTP protocol, *in general*, are stateless. State is not
+  preserved between requests, which simplifies things a lot - apps don't
+  keep track of who is "on the site", except in sort of secondary ways,
+  like cookies and analytics trackers. Every request is handled from
+  a clean slate (this is a bit idealized, but mostly how it works).
 
 ### What are the parts of an HTTP request?
 
@@ -111,6 +114,9 @@ The Address is a URI (a URL is a kind of URI).
 
 The URI will include:
 
+    protocol   domain   [:port]     /path         [?query-string]      [#anchor tag]
+      |          |         |         |                     |                  |
+    _____  ______________ ___ ______________________ ______________________ _______
     http://www.example.com:80/some/path/to/index.html?param=1234&other=hello#anchor
 
   * a protocol (HTTP, HTTPS)

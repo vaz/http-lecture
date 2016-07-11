@@ -232,8 +232,11 @@ See more: https://rack.github.io/
 
 ## What was that `http` command-line program?
 
-It's [HTTPie](https://github.com/jkbrzt/httpie), you can install
-it if you want. [HTTParty](https://github.com/jnunemaker/httparty)
+It's [HTTPie](https://github.com/jkbrzt/httpie), you can install it if you
+want. I use the `-phHbB` flag to tell it to print headers and bodies for
+requests and responses (the whole exchange) instead of just response body.
+
+[HTTParty](https://github.com/jnunemaker/httparty)
 is another one, written in Ruby, providing a Ruby API and a CLI tool.
 
 An older and way more common HTTP CLI tool is [cURL](https://curl.haxx.se/).

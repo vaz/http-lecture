@@ -230,6 +230,29 @@ frameworks like Sinatra and Rails.
 
 See more: https://rack.github.io/
 
+### Playing with simple Rack and Sinatra apps
+
+Project files: <https://github.com/vaz/http-lecture>
+
+#### Screenshots:
+
+Sinatra app (CLI):
+
+![Sinatra app CLI
+screenshot](https://raw.githubusercontent.com/vaz/http-lecture/master/screenshots/sinatra-app-cli.png)
+
+Sinatra app (browser):
+
+![Sinatra app browser
+screenshot](https://raw.githubusercontent.com/vaz/http-lecture/master/screenshots/sinatra-app-browser.png)
+
+Plain Rack app (CLI):
+
+![Rack app CLI
+screenshot](https://raw.githubusercontent.com/vaz/http-lecture/master/screenshots/rack-app-cli.png)
+
+
+
 ## What was that `http` command-line program?
 
 It's [HTTPie](https://github.com/jkbrzt/httpie), you can install it if you

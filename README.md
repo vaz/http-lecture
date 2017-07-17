@@ -15,6 +15,10 @@ ERD is lightweight (as far as diagramming methods go) and perfect for modeling r
 schemas. You can whiteboard it or use one of many tools (I used [LucidChart](https://www.lucidchart.com/)
 during the lecture, there are many others out there).
 
+We designed part of an e-commerce app with users, products and carts:
+
+![Users, products and carts ERD](https://raw.githubusercontent.com/vaz/lhl-lectures/sql/2017-07/erd.png)
+
 Parts of ERD in point-form:
 
   - Entities

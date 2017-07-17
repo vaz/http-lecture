@@ -47,7 +47,7 @@ Parts of ERD in point-form:
 
 ### Creating tables
 
-See `schema.sql`.
+See the file: [1-create-schema.sql](https://github.com/vaz/lhl-lectures/blob/sql/2017-07/1-create-schema.sql)
 
 Notes:
 
@@ -81,7 +81,7 @@ Constraints, defaults:
 
 ### Inserting data
 
-See `insert.sql`.
+See the file: [2-insert-data.sql](https://github.com/vaz/lhl-lectures/blob/sql/2017-07/2-insert-data.sql)
 
 Similar to when creating schema, I used `DELETE FROM table` naming tables in reverse order from
 how I insert data to make the file re-runnable. If you list out column names in an INSERT, you
@@ -89,7 +89,7 @@ can re-order them or omit some of them (like auto-generated IDs or timestamps).
 
 ### SELECT with JOIN
 
-See `selects.sql`.
+See the file: [3-queries.sql](https://github.com/vaz/lhl-lectures/blob/sql/2017-07/3-queries.sql)
 
 Did some basic SELECTs and JOINs. Discussed `INNER JOIN`, `LEFT/RIGHT/FULL OUTER JOIN`: taking
 left/right by which table(s) you name on each side of the JOIN keyword, the outer joins will

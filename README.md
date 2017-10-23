@@ -228,7 +228,7 @@ You tell me?
 
 (Here's what we came up with during lecture:)
 
-![https://cl.ly/2h3a1u2q1n3i](Flights ERD)
+<a href="https://cl.ly/2h3a1u2q1n3i" target="_blank"><img src="https://d26dzxoao6i3hh.cloudfront.net/items/1o2t0I1E3G11370W0D0H/erd.png" style="display: block;height: auto;width: 100%;"/></a>
 
 ---
 

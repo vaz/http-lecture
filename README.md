@@ -1,5 +1,7 @@
-<!-- This was used as an external markdown source for reveal.js slide deck.
-     Forgive the sometimes weird reading flow that results. -->
+<small>
+This was used as an external markdown source for reveal.js slide deck.
+Forgive the sometimes weird reading flow that results.
+</small>
 
 # Intro to:<br>ERD and SQL
 
@@ -223,6 +225,10 @@ But let's use software: https://www.lucidchart.com
 ### An ERD for what?
 
 You tell me?
+
+(Here's what we came up with during lecture:)
+
+![https://cl.ly/2h3a1u2q1n3i](Flights ERD)
 
 ---
 

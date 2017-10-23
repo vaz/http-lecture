@@ -1,34 +1,64 @@
--- Insering data
+-- Insert some example data
+
+DELETE FROM "passengers";
+DELETE FROM "flights";
+DELETE FROM "aircrafts";
+DELETE FROM "carriers";
+DELETE FROM "airports";
+DELETE FROM "people";
+
+INSERT INTO "people"
+  (id, name, date_of_birth, passport_number) VALUES
+  (1, 'Person A', now() - interval '22 years',   '11111111'),
+  (2, 'Person B', now() - interval '27.6 years', '22222222'),
+  (3, 'Person who hates flying', '1976-04-03',   '33333333');
+
+INSERT INTO "airports"
+  (id, name, code) VALUES
+  (1, 'Vancouver International', 'YVR'),
+  (2, 'Los Angeles Airport', 'LAX');
+
+INSERT INTO "carriers"
+  (id, name) VALUES
+  (1, 'Air Canada'),
+  (2, 'Delta Airlines'),
+  (3, 'Super discount airlines (defunct)');
+
+INSERT INTO "aircrafts"
+  (id, carrier_id, model, capacity) VALUES
+  /* I don't know anything about planes. */
+  (1, 1, 'Boeing 747', 150),
+  (2, 1, 'Boeing 757', 200),
+  (3, 2, 'Boeing 747', 150),
+  (4, null, 'Fighter Jet', 3);
+  -- No carrier owns the fighter jet
+  -- carrier 3 (discount airlines) doesn't have any aircraft
+
+INSERT INTO "flights"
+  (id, flight_number, aircraft_id, carrier_id,
+    departure_time, arrival_time, origin_id, destination_id)
+  VALUES
+  (1, '12345A', 1, 1,
+    '2004-10-19 10:44:00-07',
+    '2004-10-19 14:53:54-07',
+    1, 2),
+  (2, '12456B', 3, 2,
+    now() - interval '100 days',
+    now() - interval '100 days' + interval '4 hours',
+    2, 1),
+  (3, '12456B', 2, 1,
+    now() - interval '70 days',
+    now() - interval '70 days' + interval '4 hours',
+    2, 1);
+
+INSERT INTO "passengers" (flight_id, person_id, seat_number) VALUES
+  (1, 1, '12A'),
+  (1, 2, '14B'),
+  (2, 1, '13C'),
+  (2, 2, '13B'),
+  (3, 1, '8A');
 
 
--- So that I can run this script over and over...
--- Deleting all records from each table, one at a time, in reverse order
--- from how I insert them (to respect constraints like foreign key).
---
--- See how scary DELETE FROM table without a WHERE clause is. Imagine having
--- lots of important data.
-DELETE FROM "cart_items";
-DELETE FROM "carts";
-DELETE FROM "users";
-DELETE FROM "products";
-
-INSERT INTO "products" (id, name, price, inventory, description) VALUES
-  (1, 'Cetaphil',       '10.99',    23, 'I don''t know what this is'),
-  (2, 'Rubber Chicken', '5.00',   1000, 'For debugging'),
-  (3, 'Poke Ball',      '200.00',  100, 'Red and white');
-
-INSERT INTO "users" (id, email) VALUES
-  (1, 'vaz@example.com'),
-  (2, 'joe@example.com'), -- a user with no carts
-  (3, 'pikachu@example.com');
-
-INSERT INTO "carts" (id, user_id, created_at) VALUES
-  (1, 1, '2010-01-01 00:00'), -- my "old" cart
-  (2, 1, DEFAULT), -- my current cart
-  (3, 3, DEFAULT),
-  (4, NULL, DEFAULT); -- a cart with no user
-
-INSERT INTO "cart_items" (cart_id, product_id, quantity) VALUES
-  (1, 1, 3), -- Cetaphil x3 in cart 1
-  (1, 2, 1), -- Rubber Chicken x1 in cart 1
-  (3, 3, 10); -- Poke Ball x10 in cart 3
+/* INSERT INTO "..." (id, ...) VALUES */
+/*   (...), */
+/*   (...); */

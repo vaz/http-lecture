@@ -1,134 +1,246 @@
+<!-- This was used as an external markdown source for reveal.js slide deck.
+     Forgive the sometimes weird reading flow that results. -->
 
-# Intro to ERD and SQL
+# Intro to:<br>ERD and SQL
 
-In this lecture we're reviewing ERD and putting one together for a simple app concept.
-Then writing the SQL to create corresponding tables, insert data and query it. In the
-process we explore the different types of table join, and touch on aggregation.
+---
 
+## ERD? SQL?
 
-## ERD
+Today we learn some new *TLAs*!
 
-ERD is very useful! Data modeling is super important, it's the foundation of an application.
-Your data design will strongly influence how the rest of the app comes together.
+- **ERD**: Entity Relationship Diagram
+- **SQL**: Structured Query Language. Or just "Sequel".
+- **TLA**: Three-Letter Acronym. (Get used to them.)
 
-ERD is lightweight (as far as diagramming methods go) and perfect for modeling relational database
-schemas. You can whiteboard it or use one of many tools (I used [LucidChart](https://www.lucidchart.com/)
-during the lecture, there are many others out there).
+<small>
+(And also why and how to use what they stand for. At least the first two.)
+</small>
 
-We designed part of an e-commerce app with users, products and carts:
+---
 
-![Users, products and carts ERD](https://raw.githubusercontent.com/vaz/lhl-lectures/sql/2017-07/erd.png)
+## Covered today:
 
-Parts of ERD in point-form:
+### First half:
 
-  - Entities
-    - An entity (or record type, or table) has instances (or records, or rows)
-    - These are the types of things (data) that we care about in our app.
-    - Or, our "business domain objects" if you wanna sound like an engineer.
-  - Attributes
-    - AKA properties, fields, columns, belonging to our entities.
-  - Keys
-    - A *primary key* uniquely identifies every instance (row)
-    - A *foreign key* is a primary key making an appearance in another table.
-      It doesn't act like a key in that table (it's not always unique, or else
-      every relationship would be one-to-one).
-    - *Natural* vs *surrogate* (or artificial) keys: a natural key is part of
-      the data already (like a SIN or email), while a surrogate key is added
-      just to use as a key (like an auto-incrementing integer ID).
-    - *Simple keys* are made up of a single attribute. *Compound keys* are
-      made up of multiple attributes that are *unique together* within the table.
-  - Relationships
-    - Connections between entities.
-    - Often described with phrases like "has a", "belongs to", "has many".
-    - Described in "normal form" using foreign key relationships to avoid
-      data duplication.
-  - Cardinality
-    - One-to-one, one-to-many, many-to-many
-    - Mandatory versus optional (minimum of 0, or 1?)
+* Learn about ERD (what, why, how)
+* Come up with an awesome app idea and we'll make an ERD for it.
+    * By awesome I mean trivial.
+    * Hopefully you give me ideas, or else it'll probably be pretty cliché.
+* Write some SQL to create tables (in PostgreSQL) based on our ERD.
 
+vvv
+
+### After the break:
+
+* Write more SQL to:
+    * Insert data into our tables.
+    * Query the data, explore different JOINs
+    * Basic aggregations (maybe)
+
+---
+
+## Entity Relationship Diagrams
+
+ERD is a diagramming method used to describe:
+
+- Entities
+- Attributes
+- Keys
+- Relationships
+- Cardinality
+
+---
+
+### Entities
+
+- Entities are *types of structured data* used by an app
+- An *instance* of an Entity is an individual record
+    - We might have an Entity "Tweet"
+    - and many instances or records (tweets)
+- An Entity describes the format (or schema) that its records must adhere to.
+
+vvv
+
+### Entities (cont'd)
+
+Examples: Users, Products, Categories, Comments, Orders ...
+
+- In SQL lingo: Entities correspond to Tables.
+- In JS: Entities have so far been informal; we've just regularly
+used plain objects that had the same kinds of properties as records.
+
+---
+
+### Attributes
+
+- An entity has Attributes, which describe and constrain
+  the property values of its records:
+    - data type
+    - value constraints (uniqueness, etc)
+    - default values
+
+```
+Product
+- id : integer (primary key, unique, not null)
+- name : string (not null)
+- price : numeric (not null, default 0.00)
+```
+
+- Comparison of ERD to SQL:
+    - Entities have Attributes
+    - Tables have Columns
+
+---
+
+### Keys
+
+- A key is an attribute (or set of attributes) we can use to uniquely identify
+  any single record in a table.
+
+- In other words, if we got rid of every other attribute other than
+  the key attribute(s), every record would still be unique.
+
+- By querying using a key, we can fetch individual records.
+
+vvv
+
+### Keys
+
+- A *simple key* consists of a single attribute
+- A *compound key* consists of more than one: taken together, they're unique
+  within the table.
+
+```
+warehouse_id | shelf_id | item
+-------------+----------+----------------------------
+ 1           | 4        | a rubber duck
+ 1           | 6        | a decorative pineapple
+ 2           | 4        | a USB cable with cats on it
+```
+
+In this example, `warehouse_id` and `shelf_id` together work as a
+compound key, even though neither are simple keys on their own.
+
+vvv
+
+### Keys
+
+An entity can have any number of keys.
+
+- A *primary key* is distinguished as the default key to use when
+  querying for a record.
+- A *foreign key* is not actually a key in the Entity it belongs to;
+  it means a key from another table is making an appearance in this one.
+    - This is how relationships are formed between records.
+
+vvv
+
+### Keys
+
+A key can also be natural or artificial (or "surrogate"):
+
+- A *natural key* is data that would "naturally" be part of the Entity
+  anyway, but happens to qualify as a key.
+    - Examples: Email, username, SIN...
+- A *surrogate key* is added just for the sake of being a key.
+  It has no "real world" meaning.
+    - Example: an auto-incrementing integer `id` attribute
+
+<small>
+In practice, surrogate keys (especially integer keys named `id`) are
+often added to all Entities even if they have a natural key, for
+consistency. (Though it's a topic of debate.)
+</small>
+
+---
+
+### Relationships
+
+Relationships between Entities are created by adding *foreign key*
+attributes.
+
+This is in stark contrast to the "nested objects" seen in JS, JSON
+and BSON (MongoDB).
+
+Instead of nesting, a foriegn key can be used to look up the exact
+record we want to reference. SQL JOINs make this even more powerful.
+
+---
+
+### Cardinality
+
+When there's a relationship between entities, cardinality describes
+"how many on either end" of the relationship.
+
+- One-to-many
+- One-to-one
+- Many-to-many
+- Mandatory or optional? (Min 0 or 1?)
+
+vvv
+
+### Cardinality
+
+- One-to-many
+    - Often phrased as "X has many Y"; thus "Y belongs to X"
+    - Similar to a JS object property having an array as its value,
+      but the array holds IDs, not the actual objects:
+
+      ```
+      user = {
+        name: "Guy with pets",
+        // pets: [ { ... }, { ... }, ... ], // No!
+        pets: [ 3, 6, 9 ],
+      }
+      ```
+
+vvv
+
+### Cardinality
+
+- One-to-one
+    - Similar, except uniqueness is guaranteed on both sides.
+    - An example would be a User having one Profile.
+
+vvv
+
+### Cardinality
+
+- Many-to-many
+    - "X has and belongs to many Y"
+    - "Posts have many tags; Tags have many posts"
+    - We actually need a third table (a "join table") to create
+      the relationship: it holds two foreign keys.
+
+---
+
+## Let's make an ERD.
+
+ERD is a methodology, not a specific tool. We could whiteboard an ERD.
+But let's use software: https://www.lucidchart.com
+
+### An ERD for what?
+
+You tell me?
+
+---
 
 ## SQL
 
-### Creating tables
+SQL is mainly two things:
 
-See the file: [1-create-schema.sql](https://github.com/vaz/lhl-lectures/blob/sql/2017-07/1-create-schema.sql)
+- A Data Definition Language (DDL)
+    - Directives used to create and modify tables, columns, constraints,
+      indexing behaviour, etc.
+- A powerful query language for inserting, updating, deleting, and selecting
+  data within the tables.
 
-Notes:
+vvv
 
-- I used `DROP TABLE IF EXISTS...` before my `CREATE TABLE` statements
-  so that I could run and re-run the file while making changes. I dropped
-  tables in reverse order to how they're created, to respect foreign key
-  constraints. The `IF EXISTS` prevents an error if the table is not
-  there to be dropped (which is the case when this file is first executed).
+## SQL
 
-#### Data types and modifiers
+Now that we have an ERD, we can use SQL to define our schema in PostgreSQL.
 
-- `serial`: really a shorthand for "non-nullable, auto-incrementing integer"
-- Make `varchar` as big as it needs to be. Or 255 chars if you're not
-  concerned about optimizing (at this point, you're not).
-  Longer texts should use type `text`.
-- The `numeric` data type is best for storing money. Floating point arithmetic is
-  prone to rounding errors.  Integer (as cents) can work for currency but you
-  have to convert it back and forth.
-
-Constraints, defaults:
-
-- `NOT NULL`: adds `NOT NULL` constraint; will not save a row with a `NULL` in this field
-  - In typical DB design, fields are *not nullable* more often than they
-    are *nullable* (but `NULL` is the default, you have to specify `NOT NULL` if you want it).
-- `DEFAULT <value>`: default value assigned if no value is specified during insert
-- `REFERENCES table (column)`: add foriegn key constraint linking this field to the referenced
-  field in other table.
-- `REFERENCES table`: same as above, but use `table`'s PK as the column by default
-- `PRIMARY KEY`: adds uniqueness and `NOT NULL` constraints on this field; this key is used
-  as FK in other tables; the table is indexed on this key for faster queries
-
-### Inserting data
-
-See the file: [2-insert-data.sql](https://github.com/vaz/lhl-lectures/blob/sql/2017-07/2-insert-data.sql)
-
-Similar to when creating schema, I used `DELETE FROM table` naming tables in reverse order from
-how I insert data to make the file re-runnable. If you list out column names in an INSERT, you
-can re-order them or omit some of them (like auto-generated IDs or timestamps).
-
-### SELECT with JOIN
-
-See the file: [3-queries.sql](https://github.com/vaz/lhl-lectures/blob/sql/2017-07/3-queries.sql)
-
-Did some basic SELECTs and JOINs. Discussed `INNER JOIN`, `LEFT/RIGHT/FULL OUTER JOIN`: taking
-left/right by which table(s) you name on each side of the JOIN keyword, the outer joins will
-ensure every row from the left/right/both appears in the result, even if it has no matching row
-for this join condition.
-
-Also looked at many-to-many, querying for cart items in a format like you'd see on a cart page
-(with product name, unit price, quantity, line total). Requires 2 joins (3 tables) to do, and
-displays some data from each table. Example output:
-
-```sql
- cart_id |  product_name  | unit_price | quantity | line_total
----------+----------------+------------+----------+------------
-       1 | Cetaphil       |      10.99 |        3 |      32.97
-       1 | Rubber Chicken |       5.00 |        1 |       5.00
-       3 | Poke Ball      |     200.00 |       10 |    2000.00
-(3 rows)
-```
-
-### Basic aggregation
-
-Finally, we look at a cart summary query using SUM to aggregate prices (actually the calculated
-line totals from the previous query), and `GROUP BY carts.id` to get a total (sum) price for
-*each cart*. Example output:
-
-```sql
- cart_id |          cart_details          | cart_total
----------+--------------------------------+------------
-       1 | Cetaphil x3, Rubber Chicken x1 |      37.97
-       3 | Poke Ball x10                  |    2000.00
-(2 rows)
-```
-
-Another way to look at it: look at query output before the aggregate/GROUP BY are added and think
-about "collapsing" or "squashing" rows with some matching value (the GROUP BY value, like cart ID).
-For any other fields, think of how they aggregate (collapse together, like summing or averaging
-or joining as strings with `STRING_AGG`, which I added to generate `cart_details` just for fun)
-and if they even should, otherwise they need to be removed from the SELECT.
+After that we can try some queries, explore SQL JOINs, and maybe even
+do some basic aggregation.

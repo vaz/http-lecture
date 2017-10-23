@@ -1,33 +1,58 @@
--- Products and Carts Schema - Data Definition
+-- Flights app schema - Data Definition
 
-DROP TABLE IF EXISTS "cart_items";
-DROP TABLE IF EXISTS "carts";
-DROP TABLE IF EXISTS "users";
-DROP TABLE IF EXISTS "products";
 
-CREATE TABLE "products" (
+
+DROP TABLE IF EXISTS "passengers";
+DROP TABLE IF EXISTS "flights";
+DROP TABLE IF EXISTS "aircrafts";
+DROP TABLE IF EXISTS "carriers";
+DROP TABLE IF EXISTS "airports";
+DROP TABLE IF EXISTS "people";
+
+CREATE TABLE "people" (
   "id" serial PRIMARY KEY,
   "name" varchar(255) NOT NULL,
-  "manufacturer" varchar(255),
-  "price" numeric NOT NULL DEFAULT '0.00',
-  "inventory" int NOT NULL DEFAULT '0',
-  "description" text
+  "date_of_birth" date,
+  "passport_number" varchar(100)
 );
 
-CREATE TABLE "users" (
+CREATE TABLE "airports" (
   "id" serial PRIMARY KEY,
-  "email" varchar(255) NOT NULL,
-  "joined_at" timestamp DEFAULT CURRENT_TIMESTAMP -- does what it sounds like
+  "name" varchar(255),
+  "code" char(3)
 );
 
-CREATE TABLE "carts" (
+CREATE TABLE "carriers" (
   "id" serial PRIMARY KEY,
-  "user_id" integer REFERENCES "users", -- is nullable (cardinality: 0 or 1)
-  "created_at" timestamp DEFAULT CURRENT_TIMESTAMP
+  "name" varchar(255)
 );
 
-CREATE TABLE "cart_items" (
-  "cart_id" integer REFERENCES "carts" NOT NULL,
-  "product_id" integer REFERENCES "products" NOT NULL,
-  "quantity" integer NOT NULL
+CREATE TABLE "aircrafts" (
+  "id" serial PRIMARY KEY,
+  "carrier_id" int REFERENCES "carriers",
+  "model" varchar(255),
+  "capacity" int
 );
+
+CREATE TABLE "flights" (
+  "id" serial PRIMARY KEY,
+  "aircraft_id" int REFERENCES "aircrafts",
+  "carrier_id" int REFERENCES "carriers",
+  "origin_id" int REFERENCES "airports",
+  "destination_id" int REFERENCES "airports",
+  "flight_number" varchar(255),
+  "departure_time" timestamptz,
+  "arrival_time" timestamptz
+);
+
+CREATE TABLE "passengers" (
+  /* We don't need a surrogate id key here */
+  /* "id" serial PRIMARY KEY, */
+  "flight_id" int REFERENCES "flights",
+  "person_id" int REFERENCES "people",
+  "seat_number" varchar(100),
+
+  /* Here's a compound key: */
+  PRIMARY KEY ("flight_id", "person_id")
+);
+
